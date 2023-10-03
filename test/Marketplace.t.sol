@@ -8,10 +8,10 @@ contract MarketplaceTest is Test {
 
   ERC721Marketplace marketplace;
 
-  // Mock NFT contract
-  contract MockNFT {
-    function safeTransferFrom(address, address, uint256) external {}
-  }
+  // // Mock NFT contract
+  // contract MockNFT {
+  //   function safeTransferFrom(address, address, uint256) external {}
+  // }
 
   MockNFT nft;
 
