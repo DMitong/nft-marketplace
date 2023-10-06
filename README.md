@@ -1,66 +1,65 @@
-## Foundry
+## ERC721 Marketplace
+This is a smart contract for a decentralized ERC721 marketplace, where users can create and fulfill orders for buying and selling ERC721 tokens.
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+### Features
+-   Create orders to sell ERC721 tokens
+-   Fulfill orders to buy ERC721 tokens
+-   Edit orders (price and active status)
+-   View order details
 
-Foundry consists of:
+### Usage
+To create an order, you must first approve the marketplace contract to transfer the ERC721 token on your behalf. You can do this using the ERC721.approve() function.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+Once you have approved the marketplace contract, you can create an order using the createOrder() function. This function takes an Order object as input, which includes the following fields:
 
-## Documentation
+-   **tokenAddress:** The address of the ERC721 token contract
+-   **tokenID:** The ID of the ERC721 token
+-   **price:** The price of the ERC721 token in ETH
+-   **sig:** The signature of the order, which is used to verify that the order was created by the owner of the ERC721 token
+To fulfill an order, you must send ETH to the marketplace contract equal to the price of the order. You can then call the fulfillOrder() function with the ID of the order you want to fulfill.
 
-https://book.getfoundry.sh/
+To edit an order, you must call the editOrder() function with the ID of the order you want to edit, the new price, and the new active status.
 
-## Usage
+To view the details of an order, you can call the getOrder() function with the ID of the order.
 
-### Build
-
+#### Example
 ```shell
-$ forge build
+// Create an order to sell an ERC721 token
+Order order = Order({
+  tokenAddress: "0x1234567890ABCDEF",
+  tokenID: 1,
+  price: 1 ether,
+  sig: "0x1234567890ABCDEF"
+});
+
+// Create the order
+uint256 orderId = marketplace.createOrder(order);
+
+// Fulfill the order
+marketplace.fulfillOrder(orderId, {value: 1 ether});
+
+// Edit the order
+marketplace.editOrder(orderId, 2 ether, false);
+
+// View the order details
+Order orderDetails = marketplace.getOrder(orderId);
 ```
 
-### Test
+### Deployment
+To deploy this smart contract, you can use the following command:
 
 ```shell
-$ forge test
+forge deploy
 ```
+This will deploy the smart contract to the current network. You can then find the address of the deployed contract in the deployment directory.
 
-### Format
+### Testing
+To test this smart contract, you can use the following command:
 
 ```shell
-$ forge fmt
+forge test
+This will run all of the tests in the test directory.
 ```
 
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+### License
+This smart contract is licensed under the UNLICENSED license.
