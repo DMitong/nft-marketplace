@@ -22,7 +22,7 @@ contract Marketplace is
     uint256 privKey1;
     uint256 privKey2;
 
-    ERC721ERC721Marketplace.Order orderDetails;
+    ERC721Marketplace.Order orderDetails;
 
     function setUp() public {
         marketplace = new ERC721Marketplace();
@@ -32,7 +32,7 @@ contract Marketplace is
         (user1, privKey1) = mkaddr("user1");
         (user2, privKey2) = mkaddr("user2");
 
-        orderDetails = ERC721ERC721Marketplace.Order({
+        orderDetails = ERC721Marketplace.Order({
             tokenAddress: address(erc721),
             tokenID: 1,
             price: 1 ether,
@@ -51,13 +51,13 @@ contract Marketplace is
         orderDetails.creator = user2;
         switchSigner(user2);
 
-        vm.expectRevert(ERC721ERC721Marketplace.NotOwner.selector);
+        vm.expectRevert(ERC721Marketplace.NotOwner.selector);
         marketplace.createOrder(orderDetails);
     }
 
     function testNonApprovedNFT() public {
         switchSigner(user1);
-        vm.expectRevert(ERC721ERC721Marketplace.NotApproved.selector);
+        vm.expectRevert(ERC721Marketplace.NotApproved.selector);
         marketplace.createOrder(orderDetails);
     }
 
@@ -113,7 +113,7 @@ contract Marketplace is
         orderDetails.deadline = uint88(block.timestamp + 120 minutes);
         orderDetails.sig = constructSig(
             orderDetails.tokenAddress,
-            orderDetails.tokenAddressID,
+            orderDetails.tokenID,
             orderDetails.price,
             orderDetails.deadline,
             orderDetails.creator,
@@ -133,7 +133,7 @@ contract Marketplace is
         orderDetails.deadline = uint88(block.timestamp + 120 minutes);
         orderDetails.sig = constructSig(
             orderDetails.tokenAddress,
-            orderDetails.tokenAddressID,
+            orderDetails.tokenID,
             orderDetails.price,
             orderDetails.deadline,
             orderDetails.creator,
@@ -142,9 +142,9 @@ contract Marketplace is
         uint256 orderId = marketplace.createOrder(orderDetails);
         marketplace.editOrder(orderId, 0.01 ether, false);
 
-        ERC721ERC721Marketplace.Order memory t = marketplace.getOrder(orderId);
+        ERC721Marketplace.Order memory t = marketplace.getOrder(orderId);
         assertEq(t.price, 0.01 ether);
-        assertEq(t.active, false);
+        assertEq(t.isActive, false);
     }
 
     // EXECUTE ORDER
@@ -165,7 +165,7 @@ contract Marketplace is
         orderDetails.deadline = uint88(block.timestamp + 120 minutes);
         orderDetails.sig = constructSig(
             orderDetails.tokenAddress,
-            orderDetails.tokenAddressID,
+            orderDetails.tokenID,
             orderDetails.price,
             orderDetails.deadline,
             orderDetails.creator,
@@ -184,7 +184,7 @@ contract Marketplace is
         orderDetails.deadline = uint88(block.timestamp + 120 minutes);
         orderDetails.sig = constructSig(
             orderDetails.tokenAddress,
-            orderDetails.tokenAddressID,
+            orderDetails.tokenID,
             orderDetails.price,
             orderDetails.deadline,
             orderDetails.creator,
@@ -207,7 +207,7 @@ contract Marketplace is
         orderDetails.deadline = uint88(block.timestamp + 120 minutes);
         orderDetails.sig = constructSig(
             orderDetails.tokenAddress,
-            orderDetails.tokenAddressID,
+            orderDetails.tokenID,
             orderDetails.price,
             orderDetails.deadline,
             orderDetails.creator,
@@ -231,7 +231,7 @@ contract Marketplace is
         // orderDetails.price = 1 ether;
         orderDetails.sig = constructSig(
             orderDetails.tokenAddress,
-            orderDetails.tokenAddressID,
+            orderDetails.tokenID,
             orderDetails.price,
             orderDetails.deadline,
             orderDetails.creator,
@@ -245,14 +245,14 @@ contract Marketplace is
 
         uint256 user1BalanceAfter = user1.balance;
 
-        ERC721ERC721Marketplace.Order memory t = marketplace.getOrder(orderId);
+        ERC721Marketplace.Order memory t = marketplace.getOrder(orderId);
         assertEq(t.price, 1 ether);
-        assertEq(t.active, false);
+        assertEq(t.isActive, false);
 
-        assertEq(t.active, false);
+        assertEq(t.isActive, false);
         assertEq(
             ERC721(orderDetails.tokenAddress).ownerOf(
-                orderDetails.tokenAddressID
+                orderDetails.tokenID
             ),
             user2
         );
