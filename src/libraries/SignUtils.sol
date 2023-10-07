@@ -6,7 +6,7 @@ library SignUtils {
       address _tokenAddress,
       uint256 _tokenID,
       uint256 _price,
-      uint256 _deadline,
+      uint88 _deadline,
       address _buyer
    ) public pure returns (bytes32) {
       return keccak256(
